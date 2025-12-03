@@ -42,6 +42,7 @@
             z-index: 10;
             font-weight: bold;
             text-align: center;
+            text-shadow: 0 0 10px #FFD700;
         }
         
         #coins {
@@ -188,14 +189,14 @@
             z-index: 250;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.6s ease; /* Changed from 1s to 0.6s */
+            transition: opacity 0.6s ease;
         }
         
         .fade-overlay.active {
             opacity: 1;
         }
         
-        #shop, #leaderboard, #challenges {
+        #shop, #challenges, #achievements {
             position: fixed;
             top: 0;
             right: -400px;
@@ -209,7 +210,7 @@
             border-left: 3px solid #5cb85c;
         }
         
-        #shop.open, #leaderboard.open, #challenges.open {
+        #shop.open, #challenges.open, #achievements.open {
             right: 0;
         }
         
@@ -343,35 +344,6 @@
             gap: 5px;
         }
         
-        .leaderboard-table {
-            background: rgba(0,0,0,0.5);
-            border-radius: 8px;
-            padding: 15px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        
-        .leaderboard-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 12px;
-            margin: 4px 0;
-            background: rgba(255,255,255,0.1);
-            border-radius: 6px;
-            font-size: 14px;
-            color: white;
-        }
-        
-        .leaderboard-row.top {
-            background: rgba(255, 215, 0, 0.3);
-            border: 2px solid #FFD700;
-        }
-        
-        .leaderboard-row.you {
-            background: rgba(76, 175, 80, 0.3);
-            border: 2px solid #4CAF50;
-        }
-        
         .back-btn {
             position: static;
             background: linear-gradient(135deg, #d9534f, #c9302c);
@@ -385,13 +357,6 @@
         
         .hidden {
             display: none !important;
-        }
-        
-        .leaderboard-header {
-            font-size: 20px;
-            color: #FFD700;
-            margin-bottom: 15px;
-            text-align: center;
         }
         
         .shop-currency {
@@ -571,6 +536,153 @@
             display: flex;
             align-items: center;
         }
+        
+        /* Achievement styles */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .achievement-card {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.05));
+            border: 2px solid #8A2BE2;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .achievement-card.completed {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+            border-color: #FFD700;
+        }
+        
+        .achievement-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .achievement-name {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .achievement-desc {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-reward {
+            font-size: 14px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        /* Daily Login styles */
+        .login-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .login-day {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #5cb85c;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-day.claimed {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4CAF50;
+        }
+        
+        .login-day.today {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #FFD700;
+            animation: pulse 2s infinite;
+        }
+        
+        .login-reward {
+            font-size: 12px;
+            color: #FFD700;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .login-streak {
+            font-size: 18px;
+            color: #FFD700;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        /* Voice Line Display */
+        .voice-line {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 40;
+            opacity: 0;
+            text-align: center;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .voice-line.show {
+            opacity: 1;
+            animation: voiceSlide 2s ease-out;
+        }
+        
+        @keyframes voiceSlide {
+            0% { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            20% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            80% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+        }
+        
+        /* Celebration Effects */
+        .celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .celebration.active {
+            display: block;
+        }
+        
+        /* Particle */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -584,9 +696,11 @@
     </div>
     
     <div class="coin-reward" id="coinReward">+2 GU!</div>
+    <div class="voice-line" id="voiceLine">Awesome!</div>
     
     <div class="fade-overlay" id="fadeOverlay"></div>
     <div class="menu-overlay" id="menuOverlay" onclick="closeAllMenus()"></div>
+    <div class="celebration" id="celebration"></div>
     
     <div id="startScreen" class="active">
         <h1>BIRD OF FLAPPY</h1>
@@ -608,19 +722,24 @@
         <div class="button-row">
             <button class="menu-button" onclick="toggleShop()">
                 <span style="font-size: 48px;">🛒</span>
-                <span>SKINS</span>
+                <span>SHOP</span>
             </button>
-            <button class="menu-button" onclick="toggleLeaderboard()">
-                <span style="font-size: 48px;">🏆</span>
-                <span>TOP 100</span>
+            <button class="menu-button" onclick="toggleAchievements()">
+                <span style="font-size: 48px;">🏅</span>
+                <span>ACHIEVEMENTS</span>
             </button>
             <button class="menu-button" onclick="toggleChallenges()">
                 <span style="font-size: 48px;">🎯</span>
                 <span>DAILY</span>
             </button>
         </div>
+        
+        <div class="login-streak" id="dailyLoginInfo">
+            Daily Login Bonus Available!
+        </div>
     </div>
     
+    <!-- Shop Menu -->
     <div id="shop">
         <button class="menu-button back-btn" onclick="toggleShop()">✖ CLOSE</button>
         <h1 style="font-size: 36px; margin-bottom: 15px; color: #FFD700; text-align: center;">SKIN SHOP</h1>
@@ -631,29 +750,20 @@
         </div>
         
         <div class="shop-section">
-            <div class="section-title">🎮 CHARACTER SKINS</div>
-            <div class="shop-grid" id="skinGrid"></div>
+            <div class="section-title">🎮 CHARACTER SKINS (25 Total)</div>
+            <div class="shop-grid" id="skinGrid">
+                <div class="loading">Loading skins...</div>
+            </div>
         </div>
     </div>
     
-    <div id="leaderboard">
-        <button class="menu-button back-btn" onclick="toggleLeaderboard()">✖ CLOSE</button>
-        <h1 style="font-size: 36px; margin-bottom: 15px; color: #FFD700; text-align: center;">TOP 100 WORLD</h1>
-        <div class="leaderboard-header">Most Pipes Passed</div>
-        <div class="leaderboard-table" id="leaderboardTable">
-            <div class="loading">Loading global leaderboard...</div>
-        </div>
-    </div>
-    
+    <!-- Challenges Menu -->
     <div id="challenges">
         <button class="menu-button back-btn" onclick="toggleChallenges()">✖ CLOSE</button>
         <h1 style="font-size: 36px; margin-bottom: 15px; color: #FFD700; text-align: center;">DAILY CHALLENGES</h1>
         
         <div class="challenges-header">
-            <div class="shop-currency">
-                <div class="shop-coin-icon">GU</div>
-                <div class="shop-coin-count" id="challengeCoins">0 GU</div>
-            </div>
+            <div style="font-size: 18px; color: #FFD700;">Complete challenges for rewards!</div>
         </div>
         
         <div class="daily-reset" id="dailyResetTimer">Resets in: 24h 00m</div>
@@ -662,6 +772,35 @@
             <div class="loading">Loading daily challenges...</div>
         </div>
     </div>
+    
+    <!-- Achievements Menu -->
+    <div id="achievements">
+        <button class="menu-button back-btn" onclick="toggleAchievements()">✖ CLOSE</button>
+        <h1 style="font-size: 36px; margin-bottom: 15px; color: #FFD700; text-align: center;">ACHIEVEMENTS</h1>
+        
+        <div style="text-align: center; margin-bottom: 20px; color: #FFD700;">
+            Complete achievements for rewards!
+        </div>
+        
+        <div class="achievement-grid" id="achievementGrid">
+            <div class="loading">Loading achievements...</div>
+        </div>
+    </div>
+    
+    <!-- Daily Login Menu -->
+    <div id="dailyLogin" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.95); padding: 30px; border-radius: 15px; border: 4px solid #FFD700; z-index: 300; text-align: center; max-width: 500px; width: 90%;">
+        <h1 style="color: #FFD700; margin-bottom: 20px;">🎁 DAILY LOGIN BONUS</h1>
+        <div class="login-streak">🔥 Streak: <span id="currentStreak">0</span> days</div>
+        
+        <div class="login-calendar" id="loginCalendar"></div>
+        
+        <div style="margin: 20px 0;">
+            <div class="coin-icon-game" style="width: 60px; height: 60px; font-size: 20px; margin: 0 auto 10px;">GU</div>
+            <div style="font-size: 24px; color: #FFD700; font-weight: bold;">Today's Reward: <span id="todaysReward">50</span> GU</div>
+        </div>
+        
+        <button class="play-button" style="font-size: 24px; padding: 10px 30px;" onclick="claimDailyReward()">CLAIM REWARD!</button>
+    </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -669,6 +808,8 @@
         const scoreDisplay = document.getElementById('score');
         const startScreen = document.getElementById('startScreen');
         const coinReward = document.getElementById('coinReward');
+        const voiceLine = document.getElementById('voiceLine');
+        const celebration = document.getElementById('celebration');
         
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -682,76 +823,223 @@
             GROUND_HEIGHT = canvas.height * 0.15;
         });
         
-        // Sound Manager
+        // ========== SOUND SYSTEM ==========
         const soundManager = {
             enabled: true,
-            sounds: {},
+            audioContext: null,
             
             init() {
-                this.sounds = {
-                    flap: this.createSound(100, 'sawtooth', 0.1, 0.02, 800, 0.2),
-                    hit: this.createSound(300, 'sine', 0.3, 0.3, 200, 0.4),
-                    score: this.createSound(800, 'sine', 0.2, 0.05, 300, 0.3),
-                    coin: this.createSound(1200, 'sine', 0.2, 0.05, 400, 0.4),
-                    death: this.createSound(200, 'sawtooth', 0.5, 0.1, 100, 0.5),
-                    purchase: this.createSound(1500, 'sine', 0.2, 0.05, 500, 0.3),
-                    challengeComplete: this.createSound(1000, 'square', 0.3, 0.1, 600, 0.5)
-                };
-            },
-            
-            createSound(freq, type, attack, decay, sustain, release) {
-                return function() {
-                    if (!soundManager.enabled) return;
-                    
-                    try {
-                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        const oscillator = audioContext.createOscillator();
-                        const gainNode = audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-                        oscillator.type = type;
-                        
-                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0.2 * attack, audioContext.currentTime + 0.01);
-                        gainNode.gain.linearRampToValueAtTime(0.15 * decay, audioContext.currentTime + 0.05);
-                        gainNode.gain.linearRampToValueAtTime(0.1 * sustain, audioContext.currentTime + 0.1);
-                        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1 + (0.1 * release));
-                        
-                        oscillator.start(audioContext.currentTime);
-                        oscillator.stop(audioContext.currentTime + 0.2);
-                        
-                        setTimeout(() => audioContext.close(), 300);
-                    } catch(e) {
-                        console.log("Audio not supported");
-                    }
-                };
-            },
-            
-            play(soundName) {
-                if (this.sounds[soundName]) {
-                    this.sounds[soundName]();
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch(e) {
+                    console.log("Web Audio API not supported");
+                    this.enabled = false;
                 }
             },
             
-            toggle() {
-                this.enabled = !this.enabled;
+            playJump() {
+                if (!this.enabled) return;
+                
+                try {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(400, this.audioContext.currentTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + 0.1);
+                } catch(e) {}
+            },
+            
+            playCoin() {
+                if (!this.enabled) return;
+                
+                try {
+                    const oscillator1 = this.audioContext.createOscillator();
+                    const oscillator2 = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator1.connect(gainNode);
+                    oscillator2.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator1.frequency.setValueAtTime(1200, this.audioContext.currentTime);
+                    oscillator2.frequency.setValueAtTime(800, this.audioContext.currentTime);
+                    oscillator1.type = 'triangle';
+                    oscillator2.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.4, this.audioContext.currentTime + 0.05);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+                    
+                    oscillator1.start(this.audioContext.currentTime);
+                    oscillator2.start(this.audioContext.currentTime);
+                    oscillator1.stop(this.audioContext.currentTime + 0.3);
+                    oscillator2.stop(this.audioContext.currentTime + 0.3);
+                } catch(e) {}
+            },
+            
+            playDeath() {
+                if (!this.enabled) return;
+                
+                try {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(300, this.audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 0.5);
+                    oscillator.type = 'sawtooth';
+                    
+                    gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.05);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + 0.5);
+                } catch(e) {}
+            },
+            
+            playAchievement() {
+                if (!this.enabled) return;
+                
+                try {
+                    const times = [0, 0.1, 0.2, 0.3, 0.4];
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    
+                    times.forEach((time, i) => {
+                        setTimeout(() => {
+                            const oscillator = this.audioContext.createOscillator();
+                            const gainNode = this.audioContext.createGain();
+                            
+                            oscillator.connect(gainNode);
+                            gainNode.connect(this.audioContext.destination);
+                            
+                            oscillator.frequency.setValueAtTime(notes[i], this.audioContext.currentTime);
+                            oscillator.type = 'triangle';
+                            
+                            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + 0.05);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                            
+                            oscillator.start(this.audioContext.currentTime);
+                            oscillator.stop(this.audioContext.currentTime + 0.2);
+                        }, time * 1000);
+                    });
+                } catch(e) {}
             }
         };
         
-        // Initialize sounds
         soundManager.init();
         
-        // Save data
+        // ========== VOICE LINES ==========
+        const voiceLines = {
+            achievements: [
+                "Awesome!", "Great Job!", "Incredible!", "You're Amazing!",
+                "New Record!", "High Score!", "Unstoppable!", "Legendary!",
+                "Perfect!", "Fantastic!", "Excellent!", "Outstanding!"
+            ],
+            milestones: [
+                "Milestone Reached!", "Keep Going!", "You're On Fire!",
+                "Nothing Can Stop You!", "Flap Master!", "Pipe Legend!"
+            ]
+        };
+        
+        function playVoiceLine(type = 'achievements') {
+            const lines = voiceLines[type];
+            const line = lines[Math.floor(Math.random() * lines.length)];
+            voiceLine.textContent = line;
+            voiceLine.classList.add('show');
+            
+            setTimeout(() => {
+                voiceLine.classList.remove('show');
+            }, 2000);
+        }
+        
+        // ========== PARTICLE SYSTEM ==========
+        const particleSystem = {
+            particles: [],
+            
+            createCoinSparkles(x, y, count = 10) {
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.5) * 8 - 2,
+                        life: 1.0,
+                        color: '#FFD700',
+                        size: Math.random() * 5 + 2,
+                        type: 'sparkle'
+                    });
+                }
+            },
+            
+            createCelebration(count = 50) {
+                for (let i = 0; i < count; i++) {
+                    const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
+                    this.particles.push({
+                        x: Math.random() * canvas.width,
+                        y: canvas.height,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: -Math.random() * 15 - 5,
+                        life: 2.0,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        size: Math.random() * 8 + 4,
+                        type: 'celebration'
+                    });
+                }
+            },
+            
+            update() {
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3;
+                    p.life -= 0.02;
+                    
+                    if (p.life <= 0) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+            },
+            
+            draw() {
+                this.particles.forEach(p => {
+                    ctx.save();
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+        };
+        
+        // ========== SAVE DATA ==========
         const saveData = {
             coins: parseInt(localStorage.getItem('flappyCoins') || '0'),
             highScore: parseInt(localStorage.getItem('flappyHighScore') || '0'),
             currentSkin: localStorage.getItem('flappySkin') || 'classic',
             unlockedSkins: JSON.parse(localStorage.getItem('flappyUnlockedSkins') || '["classic"]'),
             playerId: localStorage.getItem('flappyPlayerId') || generatePlayerId(),
-            playerName: localStorage.getItem('flappyPlayerName') || generateCoolName(),
+            achievements: JSON.parse(localStorage.getItem('flappyAchievements') || '{}'),
+            achievementsProgress: JSON.parse(localStorage.getItem('flappyAchievementsProgress') || '{}'),
+            loginStreak: parseInt(localStorage.getItem('flappyLoginStreak') || '0'),
+            lastLoginDate: localStorage.getItem('flappyLastLoginDate') || '',
+            dailyRewardsClaimed: JSON.parse(localStorage.getItem('flappyDailyRewardsClaimed') || '[]'),
             completedChallenges: JSON.parse(localStorage.getItem('flappyCompletedChallenges') || '{}'),
             challengeProgress: JSON.parse(localStorage.getItem('flappyChallengeProgress') || '{}'),
             lastPlayDate: localStorage.getItem('flappyLastPlayDate') || '',
@@ -762,35 +1050,285 @@
             return 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
         
-        function generateCoolName() {
-            const adjectives = ['Swift', 'Epic', 'Mighty', 'Sky', 'Air', 'Flappy', 'Golden', 'Pixel', 'Pro', 'Master', 'Ultra', 'Hyper', 'Mega', 'Super', 'Turbo'];
-            const nouns = ['Bird', 'Wing', 'Flyer', 'Flier', 'Pilot', 'Ace', 'Champ', 'Hero', 'Legend', 'King', 'Lord', 'Prince', 'Eagle', 'Hawk', 'Falcon'];
-            const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-            const noun = nouns[Math.floor(Math.random() * nouns.length)];
-            return `${adj}${noun}${Math.floor(Math.random() * 100)}`;
-        }
-        
         function saveGame() {
             localStorage.setItem('flappyCoins', saveData.coins);
             localStorage.setItem('flappyHighScore', saveData.highScore);
             localStorage.setItem('flappySkin', saveData.currentSkin);
             localStorage.setItem('flappyUnlockedSkins', JSON.stringify(saveData.unlockedSkins));
             localStorage.setItem('flappyPlayerId', saveData.playerId);
-            localStorage.setItem('flappyPlayerName', saveData.playerName);
+            localStorage.setItem('flappyAchievements', JSON.stringify(saveData.achievements));
+            localStorage.setItem('flappyAchievementsProgress', JSON.stringify(saveData.achievementsProgress));
+            localStorage.setItem('flappyLoginStreak', saveData.loginStreak);
+            localStorage.setItem('flappyLastLoginDate', saveData.lastLoginDate);
+            localStorage.setItem('flappyDailyRewardsClaimed', JSON.stringify(saveData.dailyRewardsClaimed));
             localStorage.setItem('flappyCompletedChallenges', JSON.stringify(saveData.completedChallenges));
             localStorage.setItem('flappyChallengeProgress', JSON.stringify(saveData.challengeProgress));
             localStorage.setItem('flappyLastPlayDate', saveData.lastPlayDate);
             localStorage.setItem('flappyDailyChallenges', JSON.stringify(saveData.dailyChallenges));
         }
         
-        // Daily Challenges
+        // ========== DAILY LOGIN SYSTEM ==========
+        const dailyLoginSystem = {
+            rewards: [10, 20, 30, 50, 75, 100, 150],
+            
+            checkDailyLogin() {
+                const today = new Date().toDateString();
+                
+                if (saveData.lastLoginDate !== today) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    
+                    if (saveData.lastLoginDate === yesterday.toDateString()) {
+                        saveData.loginStreak++;
+                    } else if (saveData.lastLoginDate !== today) {
+                        saveData.loginStreak = 1;
+                    }
+                    
+                    saveData.lastLoginDate = today;
+                    
+                    setTimeout(() => {
+                        this.showLoginBonus();
+                    }, 1000);
+                    
+                    saveGame();
+                }
+                
+                updateLoginDisplay();
+            },
+            
+            showLoginBonus() {
+                const loginMenu = document.getElementById('dailyLogin');
+                if (loginMenu) {
+                    document.getElementById('currentStreak').textContent = saveData.loginStreak;
+                    
+                    const todayIndex = (saveData.loginStreak - 1) % this.rewards.length;
+                    const reward = this.rewards[todayIndex];
+                    document.getElementById('todaysReward').textContent = reward;
+                    
+                    this.renderCalendar();
+                    
+                    loginMenu.style.display = 'block';
+                }
+            },
+            
+            claimDailyReward() {
+                const todayIndex = (saveData.loginStreak - 1) % this.rewards.length;
+                const reward = this.rewards[todayIndex];
+                
+                saveData.coins += reward;
+                totalCoins = saveData.coins;
+                
+                const today = new Date().toDateString();
+                saveData.dailyRewardsClaimed.push(today);
+                
+                soundManager.playAchievement();
+                
+                triggerCelebration(`🎁 Daily Reward: +${reward} GU!`);
+                
+                document.getElementById('dailyLogin').style.display = 'none';
+                
+                saveGame();
+                updateCoinDisplays();
+            },
+            
+            renderCalendar() {
+                const calendar = document.getElementById('loginCalendar');
+                if (!calendar) return;
+                
+                calendar.innerHTML = '';
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = document.createElement('div');
+                    day.className = 'login-day';
+                    
+                    const dayIndex = i;
+                    const reward = this.rewards[dayIndex];
+                    
+                    const daysAgo = saveData.loginStreak - (7 - i);
+                    if (daysAgo > 0) {
+                        day.classList.add('claimed');
+                    }
+                    
+                    if (i === 6) {
+                        day.classList.add('today');
+                    }
+                    
+                    day.innerHTML = `
+                        <div>Day ${i + 1}</div>
+                        <div class="login-reward">${reward} GU</div>
+                    `;
+                    
+                    calendar.appendChild(day);
+                }
+            }
+        };
+        
+        function updateLoginDisplay() {
+            const today = new Date().toDateString();
+            const hasClaimedToday = saveData.dailyRewardsClaimed.includes(today);
+            
+            document.getElementById('dailyLoginInfo').textContent = 
+                hasClaimedToday ? `🔥 ${saveData.loginStreak} Day Streak!` : '🎁 Daily Login Bonus Available!';
+        }
+        
+        // ========== ACHIEVEMENTS SYSTEM ==========
+        const achievementsSystem = {
+            achievements: [
+                {
+                    id: 'first_flight',
+                    name: 'First Flight',
+                    description: 'Play your first game',
+                    icon: '🕊️',
+                    reward: 10,
+                    condition: (stats) => stats.gamesPlayed >= 1,
+                    type: 'stat'
+                },
+                {
+                    id: 'score_10',
+                    name: 'Getting Started',
+                    description: 'Score 10 points',
+                    icon: '🎯',
+                    reward: 20,
+                    condition: (stats) => stats.highScore >= 10,
+                    type: 'score'
+                },
+                {
+                    id: 'score_50',
+                    name: 'Half Century',
+                    description: 'Score 50 points',
+                    icon: '🏆',
+                    reward: 50,
+                    condition: (stats) => stats.highScore >= 50,
+                    type: 'score'
+                },
+                {
+                    id: 'score_100',
+                    name: 'Century',
+                    description: 'Score 100 points',
+                    icon: '💯',
+                    reward: 100,
+                    condition: (stats) => stats.highScore >= 100,
+                    type: 'score'
+                },
+                {
+                    id: 'rich_bird',
+                    name: 'Rich Bird',
+                    description: 'Collect 100 coins',
+                    icon: '💰',
+                    reward: 50,
+                    condition: (stats) => stats.totalCoins >= 100,
+                    type: 'coins'
+                },
+                {
+                    id: 'millionaire',
+                    name: 'Millionaire Bird',
+                    description: 'Collect 1000 coins',
+                    icon: '🤑',
+                    reward: 500,
+                    condition: (stats) => stats.totalCoins >= 1000,
+                    type: 'coins'
+                },
+                {
+                    id: 'pipe_master',
+                    name: 'Pipe Master',
+                    description: 'Pass 100 pipes total',
+                    icon: '🎮',
+                    reward: 75,
+                    condition: (stats) => stats.totalPipesPassed >= 100,
+                    type: 'pipes'
+                },
+                {
+                    id: 'skin_collector',
+                    name: 'Skin Collector',
+                    description: 'Unlock 5 skins',
+                    icon: '🎨',
+                    reward: 100,
+                    condition: (stats) => stats.skinsUnlocked >= 5,
+                    type: 'skins'
+                },
+                {
+                    id: 'login_7',
+                    name: 'Weekly Flapper',
+                    description: 'Login for 7 consecutive days',
+                    icon: '🔥',
+                    reward: 150,
+                    condition: (stats) => stats.loginStreak >= 7,
+                    type: 'login'
+                },
+                {
+                    id: 'legendary',
+                    name: 'Legendary Bird',
+                    description: 'Score 500 points',
+                    icon: '🌟',
+                    reward: 500,
+                    condition: (stats) => stats.highScore >= 500,
+                    type: 'score'
+                }
+            ],
+            
+            checkAchievements(gameStats) {
+                let newAchievements = [];
+                
+                this.achievements.forEach(achievement => {
+                    if (!saveData.achievements[achievement.id] && achievement.condition(gameStats)) {
+                        saveData.achievements[achievement.id] = true;
+                        saveData.coins += achievement.reward;
+                        totalCoins = saveData.coins;
+                        
+                        newAchievements.push(achievement);
+                        
+                        soundManager.playAchievement();
+                        playVoiceLine('achievements');
+                        triggerCelebration(`🏆 Achievement: ${achievement.name}!`);
+                    }
+                });
+                
+                if (newAchievements.length > 0) {
+                    saveGame();
+                    updateCoinDisplays();
+                }
+                
+                return newAchievements;
+            },
+            
+            renderAchievements() {
+                const grid = document.getElementById('achievementGrid');
+                if (!grid) return;
+                
+                grid.innerHTML = '';
+                
+                const gameStats = {
+                    gamesPlayed: saveData.achievementsProgress.gamesPlayed || 0,
+                    highScore: saveData.highScore,
+                    totalCoins: saveData.coins,
+                    totalPipesPassed: saveData.achievementsProgress.totalPipesPassed || 0,
+                    skinsUnlocked: saveData.unlockedSkins.length,
+                    loginStreak: saveData.loginStreak
+                };
+                
+                this.achievements.forEach(achievement => {
+                    const card = document.createElement('div');
+                    card.className = `achievement-card ${saveData.achievements[achievement.id] ? 'completed' : ''}`;
+                    
+                    card.innerHTML = `
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div class="achievement-name">${achievement.name}</div>
+                        <div class="achievement-desc">${achievement.description}</div>
+                        <div class="achievement-reward">Reward: GU Coins</div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+            }
+        };
+        
+        // ========== DAILY CHALLENGES ==========
         const dailyChallenges = {
             currentChallenges: null,
             
             generateDailyChallenges() {
                 const today = new Date().toDateString();
                 
-                // Check if we need to generate new challenges
                 if (saveData.lastPlayDate !== today || !saveData.dailyChallenges) {
                     saveData.lastPlayDate = today;
                     
@@ -839,24 +1377,12 @@
                             reward: 15,
                             type: 'time',
                             target: 30
-                        },
-                        {
-                            id: 'pass_moving_pipes',
-                            title: 'Pass 10 Moving Pipes',
-                            description: 'Successfully pass 10 moving pipes',
-                            icon: '🔄',
-                            reward: 30,
-                            type: 'moving_pipes',
-                            target: 10
                         }
                     ];
                     
-                    // Select 3 random challenges
                     const shuffled = [...challengeTypes].sort(() => 0.5 - Math.random());
                     saveData.dailyChallenges = shuffled.slice(0, 3);
                     
-                    // Reset progress for new challenges
-                    saveData.completedChallenges = {};
                     saveData.challengeProgress = {};
                     
                     saveGame();
@@ -890,11 +1416,9 @@
                     saveData.coins += challenge.reward;
                     totalCoins = saveData.coins;
                     
-                    // Play sound
-                    soundManager.play('challengeComplete');
+                    soundManager.playAchievement();
                     
-                    // Show reward message
-                    coinReward.textContent = `Challenge Complete! +${challenge.reward} GU!`;
+                    coinReward.textContent = `Challenge Complete!`;
                     coinReward.classList.add('show');
                     
                     setTimeout(() => {
@@ -946,7 +1470,7 @@
                         <div class="challenge-description">${challenge.description}</div>
                         <div class="challenge-reward">
                             <div class="coin-icon-game" style="width: 20px; height: 20px; font-size: 10px;">GU</div>
-                            <span>${challenge.reward} GU</span>
+                            <span>Reward: GU Coins</span>
                         </div>
                         ${!saveData.completedChallenges[challenge.id] ? `
                             <div class="challenge-progress">
@@ -959,13 +1483,25 @@
                     grid.appendChild(card);
                 });
                 
-                // Update reset timer
                 document.getElementById('dailyResetTimer').textContent = `Resets in: ${this.getTimeUntilReset()}`;
-                document.getElementById('challengeCoins').textContent = saveData.coins + ' GU';
             }
         };
         
-        // Skins
+        // ========== CELEBRATION SYSTEM ==========
+        function triggerCelebration(message = "CELEBRATION!") {
+            coinReward.textContent = message;
+            coinReward.classList.add('show');
+            
+            particleSystem.createCelebration(100);
+            
+            playVoiceLine('milestones');
+            
+            setTimeout(() => {
+                coinReward.classList.remove('show');
+            }, 3000);
+        }
+        
+        // ========== SKINS (25 Total) ==========
         const birdSkins = [
             { id: 'classic', name: 'Classic Bird', price: 0, emoji: '🐤', description: 'The original flappy bird', color: '#FFD700' },
             { id: 'duck', name: 'Yellow Duck', price: 10, emoji: '🦆', description: 'Quack quack!', color: '#FFD700' },
@@ -987,10 +1523,14 @@
             { id: 'galaxy', name: 'Galaxy Bird', price: 1000, emoji: '🌌', description: 'Cosmic traveler', color: '#4A00E0' },
             { id: 'gold', name: 'Golden Eagle', price: 2000, emoji: '🥇', description: 'Solid gold', color: '#FFD700' },
             { id: 'diamond', name: 'Diamond Bird', price: 5000, emoji: '💎', description: 'Sparkling gem', color: '#B9F2FF' },
-            { id: 'king', name: 'King', price: 10000, emoji: '👑', description: 'Royal ruler', color: '#FFD700' }
+            { id: 'king', name: 'King', price: 10000, emoji: '👑', description: 'Royal ruler', color: '#FFD700' },
+            { id: 'ghost', name: 'Ghost', price: 750, emoji: '👻', description: 'Boo!', color: '#FFFFFF' },
+            { id: 'zombie', name: 'Zombie Bird', price: 850, emoji: '🧟', description: 'Undead flyer', color: '#7CFC00' },
+            { id: 'vampire', name: 'Vampire Bat', price: 900, emoji: '🦇', description: 'Bloodthirsty', color: '#8B0000' },
+            { id: 'angel', name: 'Angel Bird', price: 1200, emoji: '👼', description: 'Heavenly flyer', color: '#FFFFFF' }
         ];
         
-        // Game variables
+        // ========== GAME VARIABLES ==========
         let bird = {
             x: canvas.width * 0.15,
             y: canvas.height / 2,
@@ -1017,7 +1557,7 @@
         let difficulty = 1;
         let gamesPlayedToday = 0;
         let gameStartTime = 0;
-        let movingPipesPassed = 0;
+        let totalPipesPassed = 0;
         
         // PIPE CONFIGURATION
         let PIPE_WIDTH = canvas.width * 0.08;
@@ -1027,9 +1567,11 @@
         
         // Coin reward milestones
         const coinMilestones = [
-            { score: 20, coins: 2, message: "+2 GU!" },
-            { score: 50, coins: 5, message: "+5 GU!" },
-            { score: 100, coins: 10, message: "+10 GU!" },
+            { score: 10, coins: 2, message: "+2 GU!" },
+            { score: 25, coins: 5, message: "+5 GU!" },
+            { score: 50, coins: 10, message: "+10 GU!" },
+            { score: 100, coins: 50, message: "+50 GU!" },
+            { score: 250, coins: 100, message: "+100 GU!" },
             { score: 500, coins: 250, message: "+250 GU! INSANE!" }
         ];
         let reachedMilestones = new Set();
@@ -1102,37 +1644,37 @@
         }
         
         function drawPipe(pipe) {
-            ctx.fillStyle = '#5cb85c';
+            ctx.fillStyle = pipe.moving ? '#8A2BE2' : '#5cb85c';
             ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.top);
             
-            ctx.fillStyle = '#7ed17e';
+            ctx.fillStyle = pipe.moving ? '#9370DB' : '#7ed17e';
             ctx.fillRect(pipe.x + 5, 0, 8, pipe.top);
             
-            ctx.fillStyle = '#2e7d32';
+            ctx.fillStyle = pipe.moving ? '#4B0082' : '#2e7d32';
             ctx.fillRect(pipe.x + PIPE_WIDTH - 8, 0, 8, pipe.top);
             
             const capHeight = 30;
-            ctx.fillStyle = '#5cb85c';
+            ctx.fillStyle = pipe.moving ? '#8A2BE2' : '#5cb85c';
             ctx.fillRect(pipe.x - 5, pipe.top - capHeight, PIPE_WIDTH + 10, capHeight);
-            ctx.fillStyle = '#7ed17e';
+            ctx.fillStyle = pipe.moving ? '#9370DB' : '#7ed17e';
             ctx.fillRect(pipe.x, pipe.top - capHeight, 8, capHeight);
-            ctx.fillStyle = '#2e7d32';
+            ctx.fillStyle = pipe.moving ? '#4B0082' : '#2e7d32';
             ctx.fillRect(pipe.x + PIPE_WIDTH - 3, pipe.top - capHeight, 8, capHeight);
             
-            ctx.fillStyle = '#5cb85c';
+            ctx.fillStyle = pipe.moving ? '#8A2BE2' : '#5cb85c';
             ctx.fillRect(pipe.x, pipe.bottom, PIPE_WIDTH, canvas.height - pipe.bottom);
             
-            ctx.fillStyle = '#7ed17e';
+            ctx.fillStyle = pipe.moving ? '#9370DB' : '#7ed17e';
             ctx.fillRect(pipe.x + 5, pipe.bottom, 8, canvas.height - pipe.bottom);
             
-            ctx.fillStyle = '#2e7d32';
+            ctx.fillStyle = pipe.moving ? '#4B0082' : '#2e7d32';
             ctx.fillRect(pipe.x + PIPE_WIDTH - 8, pipe.bottom, 8, canvas.height - pipe.bottom);
             
-            ctx.fillStyle = '#5cb85c';
+            ctx.fillStyle = pipe.moving ? '#8A2BE2' : '#5cb85c';
             ctx.fillRect(pipe.x - 5, pipe.bottom, PIPE_WIDTH + 10, capHeight);
-            ctx.fillStyle = '#7ed17e';
+            ctx.fillStyle = pipe.moving ? '#9370DB' : '#7ed17e';
             ctx.fillRect(pipe.x, pipe.bottom, 8, capHeight);
-            ctx.fillStyle = '#2e7d32';
+            ctx.fillStyle = pipe.moving ? '#4B0082' : '#2e7d32';
             ctx.fillRect(pipe.x + PIPE_WIDTH - 3, pipe.bottom, 8, capHeight);
         }
         
@@ -1198,17 +1740,14 @@
             const maxTop = canvas.height - GROUND_HEIGHT - PIPE_GAP - 100;
             const top = Math.random() * (maxTop - minTop) + minTop;
             
-            // Make every 3rd pipe a moving pipe
-            const isMovingPipe = pipes.length % 3 === 0;
-            
             pipes.push({
                 x: canvas.width,
                 top: top,
                 bottom: top + PIPE_GAP,
                 scored: false,
-                moving: isMovingPipe,
-                moveDirection: isMovingPipe ? (Math.random() > 0.5 ? 1 : -1) : 0,
-                moveSpeed: isMovingPipe ? 1 + Math.random() * 2 : 0,
+                moving: Math.random() < 0.3,
+                moveDirection: Math.random() > 0.5 ? 1 : -1,
+                moveSpeed: 0.5 + Math.random() * 1,
                 originalTop: top
             });
         }
@@ -1217,6 +1756,9 @@
             if (!gameStarted || !gameActive || gameOver) return;
             
             frame++;
+            
+            // Update particle system
+            particleSystem.update();
             
             // Check coin milestones
             checkCoinMilestones();
@@ -1264,15 +1806,13 @@
                     score++;
                     coinsThisRound++;
                     totalCoins++;
+                    totalPipesPassed++;
                     
                     // Play score sound
-                    soundManager.play('score');
+                    soundManager.playCoin();
                     
-                    // Update challenge progress for moving pipes
-                    if (pipe.moving) {
-                        movingPipesPassed++;
-                        dailyChallenges.updateChallengeProgress('pass_moving_pipes', movingPipesPassed);
-                    }
+                    // Create coin sparkles
+                    particleSystem.createCoinSparkles(bird.x, bird.y);
                     
                     scoreDisplay.textContent = score;
                     document.getElementById('coinCount').textContent = totalCoins;
@@ -1306,16 +1846,20 @@
                     saveData.coins = totalCoins;
                     
                     // Play coin sound
-                    soundManager.play('coin');
+                    soundManager.playCoin();
                     
-                    // Show reward message
-                    coinReward.textContent = milestone.message;
-                    coinReward.classList.add('show');
-                    
-                    // Hide after delay
-                    setTimeout(() => {
-                        coinReward.classList.remove('show');
-                    }, 2000);
+                    // Show celebration for big milestones
+                    if (milestone.coins >= 50) {
+                        triggerCelebration(milestone.message);
+                    } else {
+                        // Show reward message
+                        coinReward.textContent = milestone.message;
+                        coinReward.classList.add('show');
+                        
+                        setTimeout(() => {
+                            coinReward.classList.remove('show');
+                        }, 2000);
+                    }
                     
                     // Update coin display
                     document.getElementById('coinCount').textContent = totalCoins;
@@ -1354,6 +1898,9 @@
             }
             
             drawGround();
+            
+            // Draw particles
+            particleSystem.draw();
         }
         
         function gameLoop() {
@@ -1375,7 +1922,7 @@
             }
             
             bird.velocity = bird.jump;
-            soundManager.play('flap');
+            soundManager.playJump();
         }
         
         function startWaitTimer() {
@@ -1384,6 +1931,24 @@
                 gameStartTime = Date.now();
                 gamesPlayedToday++;
                 dailyChallenges.updateChallengeProgress('play_5_games', gamesPlayedToday);
+                
+                // Update achievement progress
+                if (!saveData.achievementsProgress.gamesPlayed) {
+                    saveData.achievementsProgress.gamesPlayed = 0;
+                }
+                saveData.achievementsProgress.gamesPlayed++;
+                saveData.achievementsProgress.totalPipesPassed = totalPipesPassed;
+                
+                // Check achievements
+                const gameStats = {
+                    gamesPlayed: saveData.achievementsProgress.gamesPlayed,
+                    highScore: saveData.highScore,
+                    totalCoins: saveData.coins,
+                    totalPipesPassed: totalPipesPassed,
+                    skinsUnlocked: saveData.unlockedSkins.length,
+                    loginStreak: saveData.loginStreak
+                };
+                achievementsSystem.checkAchievements(gameStats);
             }, 2000);
         }
         
@@ -1391,8 +1956,7 @@
             if (gameOver) return;
             
             gameOver = true;
-            soundManager.play('death');
-            soundManager.play('hit');
+            soundManager.playDeath();
             
             const fadeOverlay = document.getElementById('fadeOverlay');
             fadeOverlay.classList.add('active');
@@ -1401,9 +1965,25 @@
             
             if (score > saveData.highScore) {
                 saveData.highScore = score;
+                
+                // Play voice line for new record
+                playVoiceLine('achievements');
+                
+                // Show celebration for high score
+                if (score >= 50) {
+                    triggerCelebration(`🎉 NEW HIGH SCORE: ${score}!`);
+                }
             }
             
-            await submitToGlobalLeaderboard(score);
+            // Check achievements
+            const gameStats = {
+                highScore: saveData.highScore,
+                totalCoins: saveData.coins,
+                totalPipesPassed: totalPipesPassed,
+                skinsUnlocked: saveData.unlockedSkins.length,
+                loginStreak: saveData.loginStreak
+            };
+            achievementsSystem.checkAchievements(gameStats);
             
             saveGame();
             
@@ -1413,95 +1993,12 @@
                 document.getElementById('score').classList.add('hidden');
                 document.getElementById('coins').classList.add('hidden');
                 updateCoinDisplays();
+                updateLoginDisplay();
                 
                 setTimeout(() => {
                     fadeOverlay.classList.remove('active');
                 }, 100);
-            }, 600); // Changed from 1000 to 600
-        }
-        
-        // Global leaderboard
-        const GLOBAL_LEADERBOARD_KEY = 'flappy_global_leaderboard_v2';
-        
-        async function submitToGlobalLeaderboard(score) {
-            try {
-                const entry = {
-                    playerId: saveData.playerId,
-                    playerName: saveData.playerName,
-                    score: score,
-                    skin: saveData.currentSkin,
-                    date: new Date().toISOString(),
-                    timestamp: Date.now()
-                };
-                
-                let globalLeaderboard = JSON.parse(localStorage.getItem(GLOBAL_LEADERBOARD_KEY) || '[]');
-                
-                const existingIndex = globalLeaderboard.findIndex(e => e.playerId === saveData.playerId);
-                
-                if (existingIndex !== -1) {
-                    if (score > globalLeaderboard[existingIndex].score) {
-                        globalLeaderboard[existingIndex] = entry;
-                    }
-                } else {
-                    globalLeaderboard.push(entry);
-                }
-                
-                globalLeaderboard.sort((a, b) => b.score - a.score);
-                globalLeaderboard = globalLeaderboard.slice(0, 100);
-                
-                localStorage.setItem(GLOBAL_LEADERBOARD_KEY, JSON.stringify(globalLeaderboard));
-                
-            } catch (error) {
-                console.error('Failed to submit to leaderboard:', error);
-            }
-        }
-        
-        async function loadGlobalLeaderboard() {
-            try {
-                const localScores = JSON.parse(localStorage.getItem(GLOBAL_LEADERBOARD_KEY) || '[]');
-                return localScores
-                    .sort((a, b) => b.score - a.score)
-                    .slice(0, 100);
-            } catch (error) {
-                return [];
-            }
-        }
-        
-        async function renderLeaderboard() {
-            const table = document.getElementById('leaderboardTable');
-            table.innerHTML = '<div class="loading">Loading global leaderboard...</div>';
-            
-            try {
-                const leaderboard = await loadGlobalLeaderboard();
-                
-                if (leaderboard.length === 0) {
-                    table.innerHTML = '<div class="loading">No scores yet! Be the first to make the leaderboard!</div>';
-                    return;
-                }
-                
-                let html = '';
-                
-                leaderboard.forEach((entry, i) => {
-                    const isYou = entry.playerId === saveData.playerId;
-                    const rowClass = i < 3 ? 'top' : (isYou ? 'you' : '');
-                    
-                    const displayName = entry.playerName.length > 15 ? 
-                        entry.playerName.substring(0, 12) + '...' : 
-                        entry.playerName;
-                    
-                    html += `
-                        <div class="leaderboard-row ${rowClass}">
-                            <span>#${i + 1} ${displayName}</span>
-                            <span>${entry.score} pipes</span>
-                        </div>
-                    `;
-                });
-                
-                table.innerHTML = html;
-                
-            } catch (error) {
-                table.innerHTML = '<div class="error">Failed to load leaderboard. Try again later.</div>';
-            }
+            }, 600);
         }
         
         function resetGame() {
@@ -1518,11 +2015,12 @@
             frame = 0;
             groundX = 0;
             difficulty = 1;
-            movingPipesPassed = 0;
             
             reachedMilestones.clear();
+            particleSystem.particles = [];
             
             coinReward.classList.remove('show');
+            voiceLine.classList.remove('show');
             
             scoreDisplay.textContent = '0';
         }
@@ -1542,6 +2040,7 @@
             }, 100);
         }
         
+        // ========== MENU FUNCTIONS ==========
         function toggleShop() {
             const shop = document.getElementById('shop');
             const overlay = document.getElementById('menuOverlay');
@@ -1555,22 +2054,6 @@
                 shop.classList.add('open');
                 overlay.classList.add('active');
                 renderShop();
-            }
-        }
-        
-        function toggleLeaderboard() {
-            const leaderboard = document.getElementById('leaderboard');
-            const overlay = document.getElementById('menuOverlay');
-            const isOpen = leaderboard.classList.contains('open');
-            
-            if (isOpen) {
-                leaderboard.classList.remove('open');
-                overlay.classList.remove('active');
-            } else {
-                closeAllMenus();
-                leaderboard.classList.add('open');
-                overlay.classList.add('active');
-                renderLeaderboard();
             }
         }
         
@@ -1590,10 +2073,26 @@
             }
         }
         
+        function toggleAchievements() {
+            const achievements = document.getElementById('achievements');
+            const overlay = document.getElementById('menuOverlay');
+            const isOpen = achievements.classList.contains('open');
+            
+            if (isOpen) {
+                achievements.classList.remove('open');
+                overlay.classList.remove('active');
+            } else {
+                closeAllMenus();
+                achievements.classList.add('open');
+                overlay.classList.add('active');
+                achievementsSystem.renderAchievements();
+            }
+        }
+        
         function closeAllMenus() {
             document.getElementById('shop').classList.remove('open');
-            document.getElementById('leaderboard').classList.remove('open');
             document.getElementById('challenges').classList.remove('open');
+            document.getElementById('achievements').classList.remove('open');
             document.getElementById('menuOverlay').classList.remove('active');
         }
         
@@ -1686,11 +2185,17 @@
                 saveData.unlockedSkins.push(item.id);
                 saveData.currentSkin = item.id;
                 
-                soundManager.play('purchase');
+                soundManager.playCoin();
                 
                 saveGame();
                 renderShop();
                 updateCoinDisplays();
+                
+                // Check skin collector achievement
+                const gameStats = {
+                    skinsUnlocked: saveData.unlockedSkins.length
+                };
+                achievementsSystem.checkAchievements(gameStats);
             } else {
                 alert(`Not enough GU coins! You need ${item.price} GU but only have ${saveData.coins} GU.`);
             }
@@ -1708,6 +2213,11 @@
             document.getElementById('shopCoins').textContent = saveData.coins + ' GU';
         }
         
+        function claimDailyReward() {
+            dailyLoginSystem.claimDailyReward();
+        }
+        
+        // ========== INITIALIZATION ==========
         canvas.addEventListener('click', flap);
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
@@ -1722,16 +2232,21 @@
         
         // Initialize
         updateCoinDisplays();
+        updateLoginDisplay();
+        dailyLoginSystem.checkDailyLogin();
+        dailyChallenges.generateDailyChallenges();
         gameLoop();
         
-        // Ensure player has a name
-        if (!saveData.playerName) {
-            saveData.playerName = generateCoolName();
-            saveGame();
-        }
-        
-        // Initialize daily challenges
-        dailyChallenges.generateDailyChallenges();
+        // Check for achievements on load
+        const initialStats = {
+            gamesPlayed: saveData.achievementsProgress.gamesPlayed || 0,
+            highScore: saveData.highScore,
+            totalCoins: saveData.coins,
+            totalPipesPassed: 0,
+            skinsUnlocked: saveData.unlockedSkins.length,
+            loginStreak: saveData.loginStreak
+        };
+        achievementsSystem.checkAchievements(initialStats);
     </script>
 </body>
 </html>
