@@ -196,7 +196,7 @@
             opacity: 1;
         }
         
-        #shop, #inventory, #index, #challenges, #achievements {
+        #shop, #inventory, #index, #challenges, #achievements, #upgrades {
             position: fixed;
             top: 0;
             right: -400px;
@@ -210,7 +210,7 @@
             border-left: 3px solid #5cb85c;
         }
         
-        #shop.open, #inventory.open, #index.open, #challenges.open, #achievements.open {
+        #shop.open, #inventory.open, #index.open, #challenges.open, #achievements.open, #upgrades.open {
             right: 0;
         }
         
@@ -1028,6 +1028,110 @@
         .search-bar::placeholder {
             color: #aaa;
         }
+        
+        /* Upgrade Styles */
+        .upgrade-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .upgrade-card {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+            border: 2px solid #5cb85c;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .upgrade-card.maxed {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+            border-color: #FFD700;
+        }
+        
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .upgrade-title {
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .upgrade-level {
+            font-size: 16px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .upgrade-description {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        
+        .upgrade-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .upgrade-cost {
+            font-size: 16px;
+            color: #FFD700;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .upgrade-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: 2px solid #FFD700;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .upgrade-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5CBF60, #3C8D42);
+            transform: translateY(-2px);
+        }
+        
+        .upgrade-btn:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #666;
+        }
+        
+        .upgrade-progress {
+            margin-top: 8px;
+            background: rgba(255,255,255,0.1);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .upgrade-progress-bar {
+            height: 100%;
+            background: #4CAF50;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -1096,6 +1200,10 @@
             <button class="menu-button" onclick="toggleChallenges()">
                 <span style="font-size: 48px;">🎯</span>
                 <span>DAILY</span>
+            </button>
+            <button class="menu-button" onclick="toggleUpgrades()">
+                <span style="font-size: 48px;">⚡</span>
+                <span>UPGRADES</span>
             </button>
         </div>
         
@@ -1193,7 +1301,7 @@
         
         <div class="achievement-progress">
             <div style="color: #FFD700; font-size: 18px; margin-bottom: 5px;">
-                Progress: <span id="achievementProgress">0/200</span>
+                Progress: <span id="achievementProgress">0/250</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="achievementProgressBar" style="width: 0%"></div>
@@ -1204,17 +1312,27 @@
         
         <div class="index-filters" id="achievementFilters">
             <button class="filter-btn active" onclick="filterAchievements('all')">ALL</button>
-            <button class="filter-btn" onclick="filterAchievements('beginner')">BEGINNER</button>
-            <button class="filter-btn" onclick="filterAchievements('intermediate')">INTERMEDIATE</button>
-            <button class="filter-btn" onclick="filterAchievements('advanced')">ADVANCED</button>
-            <button class="filter-btn" onclick="filterAchievements('expert')">EXPERT</button>
-            <button class="filter-btn" onclick="filterAchievements('legendary')">LEGENDARY</button>
             <button class="filter-btn" onclick="filterAchievements('completed')">COMPLETED</button>
             <button class="filter-btn" onclick="filterAchievements('uncompleted')">UNCOMPLETED</button>
         </div>
         
         <div class="achievement-grid" id="achievementGrid">
             <div class="loading">Loading achievements...</div>
+        </div>
+    </div>
+    
+    <!-- Upgrades Menu -->
+    <div id="upgrades">
+        <button class="menu-button back-btn" onclick="toggleUpgrades()">✖ CLOSE</button>
+        <h1 style="font-size: 36px; margin-bottom: 15px; color: #FFD700; text-align: center;">UPGRADES</h1>
+        
+        <div class="shop-currency">
+            <div class="shop-coin-icon">GU</div>
+            <div class="shop-coin-count" id="upgradeCoins">0 GU</div>
+        </div>
+        
+        <div class="upgrade-grid" id="upgradeGrid">
+            <div class="loading">Loading upgrades...</div>
         </div>
     </div>
     
@@ -1258,6 +1376,7 @@
             PIPE_GAP = canvas.height * 0.38;
             BASE_PIPE_SPEED = canvas.width * 0.003;
             GROUND_HEIGHT = canvas.height * 0.15;
+            BASE_PIPE_DISTANCE = canvas.width * 0.6;
         });
         
         // ========== GAME MODIFIERS (SECRET ABILITIES) ==========
@@ -1476,8 +1595,9 @@
                 if (!this.enabled) return;
                 
                 try {
-                    const times = [0, 0.1, 0.2, 0.3, 0.4];
-                    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    // Create achievement sound (Steam-like)
+                    const times = [0, 0.1, 0.2, 0.3, 0.4, 0.5];
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
                     
                     times.forEach((time, i) => {
                         setTimeout(() => {
@@ -1491,11 +1611,11 @@
                             oscillator.type = 'triangle';
                             
                             gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-                            gainNode.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + 0.05);
-                            gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                            gainNode.gain.linearRampToValueAtTime(0.4, this.audioContext.currentTime + 0.05);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
                             
                             oscillator.start(this.audioContext.currentTime);
-                            oscillator.stop(this.audioContext.currentTime + 0.2);
+                            oscillator.stop(this.audioContext.currentTime + 0.3);
                         }, time * 1000);
                     });
                 } catch(e) {}
@@ -1628,6 +1748,36 @@
                         }, time * 1000);
                     });
                 } catch(e) {}
+            },
+            
+            playPetUnlock() {
+                if (!this.enabled) return;
+                
+                try {
+                    // Steam achievement-like sound
+                    const times = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4];
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 1975.53, 2093.00, 2637.02];
+                    
+                    times.forEach((time, i) => {
+                        setTimeout(() => {
+                            const oscillator = this.audioContext.createOscillator();
+                            const gainNode = this.audioContext.createGain();
+                            
+                            oscillator.connect(gainNode);
+                            gainNode.connect(this.audioContext.destination);
+                            
+                            oscillator.frequency.setValueAtTime(notes[i], this.audioContext.currentTime);
+                            oscillator.type = i % 3 === 0 ? 'sine' : i % 3 === 1 ? 'triangle' : 'sawtooth';
+                            
+                            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.05);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.4);
+                            
+                            oscillator.start(this.audioContext.currentTime);
+                            oscillator.stop(this.audioContext.currentTime + 0.4);
+                        }, time * 1000);
+                    });
+                } catch(e) {}
             }
         };
         
@@ -1739,7 +1889,8 @@
             totalGamesPlayed: parseInt(localStorage.getItem('flappyTotalGamesPlayed') || '0'),
             totalCoinsCollected: parseInt(localStorage.getItem('flappyTotalCoinsCollected') || '0'),
             totalPipesPassed: parseInt(localStorage.getItem('flappyTotalPipesPassed') || '0'),
-            secretEffects: JSON.parse(localStorage.getItem('flappySecretEffects') || '{}')
+            secretEffects: JSON.parse(localStorage.getItem('flappySecretEffects') || '{}'),
+            upgrades: JSON.parse(localStorage.getItem('flappyUpgrades') || '{"coinMultiplier": 1}')
         };
         
         function generatePlayerId() {
@@ -1766,6 +1917,144 @@
             localStorage.setItem('flappyTotalCoinsCollected', saveData.totalCoinsCollected);
             localStorage.setItem('flappyTotalPipesPassed', saveData.totalPipesPassed);
             localStorage.setItem('flappySecretEffects', JSON.stringify(saveData.secretEffects));
+            localStorage.setItem('flappyUpgrades', JSON.stringify(saveData.upgrades));
+        }
+        
+        // ========== UPGRADES SYSTEM ==========
+        const upgradesSystem = {
+            upgrades: [
+                {
+                    id: 'coinMultiplier',
+                    name: 'Coin Multiplier',
+                    description: 'Increase coins earned per pipe',
+                    icon: '💰',
+                    baseCost: 100, // Reduced from 1000
+                    costMultiplier: 1.5, // Reduced from 3.0
+                    maxLevel: 50,
+                    effectPerLevel: 0.1,
+                    getCurrentEffect: function() {
+                        const level = saveData.upgrades[this.id];
+                        return 1 + (level * this.effectPerLevel);
+                    },
+                    getNextCost: function() {
+                        const level = saveData.upgrades[this.id];
+                        if (level >= this.maxLevel) return Infinity;
+                        // Progressive scaling: cheaper early, expensive late
+                        if (level < 5) {
+                            return Math.floor(this.baseCost * Math.pow(1.2, level));
+                        } else if (level < 15) {
+                            return Math.floor(this.baseCost * Math.pow(1.4, level));
+                        } else if (level < 30) {
+                            return Math.floor(this.baseCost * Math.pow(1.6, level));
+                        } else {
+                            return Math.floor(this.baseCost * Math.pow(this.costMultiplier, level));
+                        }
+                    }
+                }
+            ],
+            
+            buyUpgrade(upgradeId) {
+                const upgrade = this.upgrades.find(u => u.id === upgradeId);
+                if (!upgrade) return false;
+                
+                const currentLevel = saveData.upgrades[upgradeId];
+                if (currentLevel >= upgrade.maxLevel) return false;
+                
+                const cost = upgrade.getNextCost();
+                if (saveData.coins < cost) {
+                    messageSystem.addMessage(`Not enough coins! Need ${cost} GU`, 'coin', 2000);
+                    return false;
+                }
+                
+                saveData.coins -= cost;
+                saveData.upgrades[upgradeId]++;
+                totalCoins = saveData.coins;
+                
+                soundManager.playPurchase();
+                messageSystem.addMessage(`${upgrade.name} upgraded to level ${saveData.upgrades[upgradeId]}!`, 'coin', 2000);
+                
+                saveGame();
+                updateCoinDisplays();
+                this.renderUpgrades();
+                return true;
+            },
+            
+            renderUpgrades() {
+                const grid = document.getElementById('upgradeGrid');
+                if (!grid) return;
+                
+                grid.innerHTML = '';
+                
+                this.upgrades.forEach(upgrade => {
+                    const currentLevel = saveData.upgrades[upgrade.id];
+                    const nextCost = upgrade.getNextCost();
+                    const isMaxed = currentLevel >= upgrade.maxLevel;
+                    const currentEffect = upgrade.getCurrentEffect();
+                    
+                    const card = document.createElement('div');
+                    card.className = `upgrade-card ${isMaxed ? 'maxed' : ''}`;
+                    
+                    const progressPercent = (currentLevel / upgrade.maxLevel) * 100;
+                    
+                    card.innerHTML = `
+                        <div class="upgrade-header">
+                            <div class="upgrade-title">${upgrade.icon} ${upgrade.name}</div>
+                            <div class="upgrade-level">Lvl ${currentLevel}/${upgrade.maxLevel}</div>
+                        </div>
+                        <div class="upgrade-description">${upgrade.description}</div>
+                        <div class="upgrade-stats">
+                            <div>Current: +${Math.round((currentEffect - 1) * 100)}%</div>
+                            <div>Next: +${Math.round(upgrade.effectPerLevel * 100)}%</div>
+                        </div>
+                        <div class="upgrade-cost">
+                            ${isMaxed ? 
+                                '<span style="color: #4CAF50;">MAX LEVEL</span>' : 
+                                `<div class="coin-icon-game" style="width: 20px; height: 20px; font-size: 10px;">GU</div>
+                                <span>${nextCost} GU</span>`
+                            }
+                        </div>
+                        ${!isMaxed ? 
+                            `<button class="upgrade-btn" onclick="buyUpgrade('${upgrade.id}')" ${saveData.coins < nextCost ? 'disabled' : ''}>
+                                ${saveData.coins < nextCost ? 'Need More Coins' : 'UPGRADE'}
+                            </button>` :
+                            `<button class="upgrade-btn" disabled>MAX LEVEL REACHED</button>`
+                        }
+                        <div class="upgrade-progress">
+                            <div class="upgrade-progress-bar" style="width: ${progressPercent}%"></div>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+                
+                document.getElementById('upgradeCoins').textContent = saveData.coins + ' GU';
+            },
+            
+            getUpgradeMultiplier(upgradeId) {
+                const upgrade = this.upgrades.find(u => u.id === upgradeId);
+                if (!upgrade) return 1;
+                return upgrade.getCurrentEffect();
+            }
+        };
+        
+        function toggleUpgrades() {
+            const upgrades = document.getElementById('upgrades');
+            const overlay = document.getElementById('menuOverlay');
+            const isOpen = upgrades.classList.contains('open');
+            
+            if (isOpen) {
+                upgrades.classList.remove('open');
+                overlay.classList.remove('active');
+            } else {
+                closeAllMenus();
+                upgrades.classList.add('open');
+                overlay.classList.add('active');
+                upgradesSystem.renderUpgrades();
+            }
+        }
+        
+        function buyUpgrade(upgradeId) {
+            upgradesSystem.buyUpgrade(upgradeId);
         }
         
         // ========== CRATE SHOP SYSTEM ==========
@@ -2248,6 +2537,8 @@
                 
                 if (!alreadyOwned) {
                     saveData.ownedSkins.push(skin.id);
+                    // Play pet unlock sound when getting a new skin
+                    soundManager.playPetUnlock();
                 }
                 
                 rollDisplay.textContent = `You got:`;
@@ -2774,12 +3065,12 @@
                 if (!this.timerInterval) {
                     this.timerInterval = setInterval(() => {
                         document.getElementById('dailyResetTimer').textContent = `Resets in: ${this.getTimeUntilReset()}`;
-                    }, 60000); // Update every minute
+                    }, 60000);
                 }
             }
         };
         
-        // ========== 200 ACHIEVEMENTS SYSTEM ==========
+        // ========== ACHIEVEMENTS SYSTEM ==========
         const achievementsSystem = {
             achievements: [],
             currentFilter: 'all',
@@ -2790,199 +3081,51 @@
             },
             
             generateAchievements() {
-                // Beginner Achievements (40)
-                for (let i = 1; i <= 40; i++) {
-                    this.achievements.push({
-                        id: `score_${i}`,
-                        name: `Score ${i} Points`,
-                        description: `Reach a score of ${i}`,
-                        icon: i <= 10 ? '🎯' : i <= 20 ? '🏆' : i <= 30 ? '⭐' : '🌟',
-                        reward: Math.min(100, i * 5),
-                        condition: (stats) => stats.highScore >= i,
-                        type: 'beginner',
-                        category: 'score'
-                    });
-                }
-                
-                // Coin Achievements (30)
-                for (let i = 10; i <= 300; i += 10) {
-                    this.achievements.push({
-                        id: `coins_${i}`,
-                        name: `Collect ${i} Coins`,
-                        description: `Collect ${i} coins total`,
-                        icon: i <= 100 ? '💰' : i <= 200 ? '💎' : '🤑',
-                        reward: Math.min(500, i * 2),
-                        condition: (stats) => stats.totalCoins >= i,
-                        type: i <= 100 ? 'beginner' : i <= 200 ? 'intermediate' : 'advanced',
-                        category: 'coins'
-                    });
-                }
-                
-                // Gameplay Achievements (40)
-                for (let i = 5; i <= 200; i += 5) {
-                    this.achievements.push({
-                        id: `pipes_${i}`,
-                        name: `Pass ${i} Pipes`,
-                        description: `Pass ${i} pipes total`,
-                        icon: i <= 50 ? '🎪' : i <= 100 ? '🎖️' : i <= 150 ? '👑' : '🤯',
-                        reward: Math.min(1000, i * 3),
-                        condition: (stats) => stats.totalPipesPassed >= i,
-                        type: i <= 50 ? 'beginner' : i <= 100 ? 'intermediate' : i <= 150 ? 'advanced' : 'expert',
-                        category: 'pipes'
-                    });
-                }
-                
-                // Moving Pipe Achievements (20)
-                for (let i = 5; i <= 100; i += 5) {
-                    this.achievements.push({
-                        id: `moving_${i}`,
-                        name: `Pass ${i} Moving Pipes`,
-                        description: `Pass ${i} moving pipes total`,
-                        icon: i <= 25 ? '🔄' : i <= 50 ? '🎢' : i <= 75 ? '🎯' : '🌟',
-                        reward: Math.min(2000, i * 10),
-                        condition: (stats) => stats.movingPipesPassed >= i,
-                        type: i <= 25 ? 'beginner' : i <= 50 ? 'intermediate' : i <= 75 ? 'advanced' : 'expert',
-                        category: 'moving'
-                    });
-                }
-                
-                // Game Count Achievements (20)
-                for (let i = 10; i <= 200; i += 10) {
-                    this.achievements.push({
-                        id: `games_${i}`,
-                        name: `Play ${i} Games`,
-                        description: `Play ${i} games total`,
-                        icon: i <= 50 ? '🎮' : i <= 100 ? '👨‍🎮' : i <= 150 ? '🎲' : '🎪',
-                        reward: Math.min(1500, i * 5),
-                        condition: (stats) => stats.gamesPlayed >= i,
-                        type: i <= 50 ? 'beginner' : i <= 100 ? 'intermediate' : i <= 150 ? 'advanced' : 'expert',
-                        category: 'games'
-                    });
-                }
-                
-                // Skin Collection Achievements (20)
-                for (let i = 10; i <= 200; i += 10) {
-                    this.achievements.push({
-                        id: `skins_${i}`,
-                        name: `Collect ${i} Skins`,
-                        description: `Unlock ${i} skins`,
-                        icon: i <= 50 ? '🎨' : i <= 100 ? '👕' : i <= 150 ? '👗' : '👘',
-                        reward: Math.min(5000, i * 20),
-                        condition: (stats) => stats.skinsUnlocked >= i,
-                        type: i <= 50 ? 'beginner' : i <= 100 ? 'intermediate' : i <= 150 ? 'advanced' : 'expert',
-                        category: 'skins'
-                    });
-                }
-                
-                // Secret Skin Achievements (10)
-                for (let i = 1; i <= 10; i++) {
-                    this.achievements.push({
-                        id: `secret_${i}`,
-                        name: `Unlock ${i} Secret ${i === 1 ? 'Skin' : 'Skins'}`,
-                        description: `Unlock ${i} secret skin${i === 1 ? '' : 's'}`,
-                        icon: i <= 3 ? '🔍' : i <= 6 ? '🎉' : i <= 9 ? '👑' : '🏆',
-                        reward: i * 5000,
-                        condition: (stats) => stats.secretsUnlocked >= i,
-                        type: i <= 3 ? 'advanced' : i <= 6 ? 'expert' : 'legendary',
-                        category: 'secret'
-                    });
-                }
-                
-                // Special Achievements (20)
-                const specialAchievements = [
-                    {
-                        id: 'first_flight',
-                        name: 'First Flight',
-                        description: 'Play your first game',
-                        icon: '🕊️',
-                        reward: 10,
-                        condition: (stats) => stats.gamesPlayed >= 1,
-                        type: 'beginner',
-                        category: 'special'
-                    },
-                    {
-                        id: 'login_7',
-                        name: 'Weekly Login',
-                        description: 'Login for 7 consecutive days',
-                        icon: '🔥',
-                        reward: 500,
-                        condition: (stats) => stats.loginStreak >= 7,
-                        type: 'intermediate',
-                        category: 'login'
-                    },
-                    {
-                        id: 'login_30',
-                        name: 'Monthly Login',
-                        description: 'Login for 30 consecutive days',
-                        icon: '📅',
-                        reward: 5000,
-                        condition: (stats) => stats.loginStreak >= 30,
-                        type: 'expert',
-                        category: 'login'
-                    },
-                    {
-                        id: 'rich_bird',
-                        name: 'Rich Bird',
-                        description: 'Collect 1000 coins total',
-                        icon: '🤑',
-                        reward: 5000,
-                        condition: (stats) => stats.totalCoins >= 1000,
-                        type: 'expert',
-                        category: 'coins'
-                    },
-                    {
-                        id: 'pipe_god',
-                        name: 'Pipe God',
-                        description: 'Pass 1000 pipes total',
-                        icon: '🤯',
-                        reward: 10000,
-                        condition: (stats) => stats.totalPipesPassed >= 1000,
-                        type: 'legendary',
-                        category: 'pipes'
-                    },
-                    {
-                        id: 'flappy_master',
-                        name: 'Flappy Master',
-                        description: 'Play 500 games total',
-                        icon: '🎮',
-                        reward: 25000,
-                        condition: (stats) => stats.gamesPlayed >= 500,
-                        type: 'legendary',
-                        category: 'games'
-                    },
-                    {
-                        id: 'all_skins',
-                        name: 'Complete Collection',
-                        description: 'Collect all 250+ skins',
-                        icon: '🏆',
-                        reward: 100000,
-                        condition: (stats) => stats.skinsUnlocked >= 250,
-                        type: 'legendary',
-                        category: 'skins'
-                    },
-                    {
-                        id: 'all_achievements',
-                        name: 'Achievement Master',
-                        description: 'Complete all achievements',
-                        icon: '👑',
-                        reward: 500000,
-                        condition: (stats) => stats.completedAchievements >= 199,
-                        type: 'legendary',
-                        category: 'special'
-                    }
+                // Generate 250 achievements with much harder requirements
+                const achievementTemplates = [
+                    { baseName: 'Beginner', baseScore: 10, count: 25 },
+                    { baseName: 'Novice', baseScore: 25, count: 25 },
+                    { baseName: 'Intermediate', baseScore: 50, count: 25 },
+                    { baseName: 'Advanced', baseScore: 100, count: 25 },
+                    { baseName: 'Expert', baseScore: 250, count: 25 },
+                    { baseName: 'Master', baseScore: 500, count: 25 },
+                    { baseName: 'Grand Master', baseScore: 750, count: 25 },
+                    { baseName: 'Legend', baseScore: 1000, count: 25 },
+                    { baseName: 'Mythic', baseScore: 1500, count: 25 },
+                    { baseName: 'Godlike', baseScore: 2000, count: 25 }
                 ];
                 
-                this.achievements.push(...specialAchievements);
+                const icons = ['🎯', '🏆', '⭐', '🌟', '👑', '🔥', '💎', '⚡', '🏅', '🎖️'];
+                let achievementIndex = 0;
+                
+                achievementTemplates.forEach((template, templateIndex) => {
+                    for (let i = 1; i <= template.count; i++) {
+                        const scoreRequirement = template.baseScore * i;
+                        const reward = Math.floor(scoreRequirement * 0.5);
+                        
+                        this.achievements.push({
+                            id: `achievement_${achievementIndex}`,
+                            name: `${template.baseName} Level ${i}`,
+                            description: `Score ${scoreRequirement} points`,
+                            icon: icons[templateIndex % icons.length],
+                            reward: reward,
+                            condition: (stats) => stats.highScore >= scoreRequirement,
+                            type: this.getTypeByScore(scoreRequirement)
+                        });
+                        achievementIndex++;
+                    }
+                });
+            },
+            
+            getTypeByScore(score) {
+                if (score <= 100) return 'beginner';
+                if (score <= 500) return 'intermediate';
+                if (score <= 1000) return 'advanced';
+                if (score <= 2500) return 'expert';
+                return 'legendary';
             },
             
             checkAchievements(gameStats) {
-                // Add secret skin count to stats
-                const secretSkins = crateShop.secretSkins;
-                const ownedSecretSkins = secretSkins.filter(skin => saveData.ownedSkins.includes(skin.id)).length;
-                gameStats.secretsUnlocked = ownedSecretSkins;
-                gameStats.skinsUnlocked = saveData.ownedSkins.length;
-                gameStats.completedAchievements = Object.keys(saveData.achievements).length;
-                
                 let newAchievements = [];
                 
                 this.achievements.forEach(achievement => {
@@ -3044,7 +3187,6 @@
                 }
                 
                 filteredAchievements.sort((a, b) => {
-                    // Sort by completed first, then by reward
                     const aCompleted = saveData.achievements[a.id];
                     const bCompleted = saveData.achievements[b.id];
                     
@@ -3063,7 +3205,7 @@
                         <div class="achievement-desc">${achievement.description}</div>
                         <div class="achievement-reward">Reward: ${achievement.reward} GU</div>
                         <div style="font-size: 10px; color: #aaa; margin-top: 5px;">
-                            ${achievement.type.toUpperCase()} • ${achievement.category}
+                            ${achievement.type.toUpperCase()}
                         </div>
                     `;
                     
@@ -3132,20 +3274,20 @@
         let bestStreakToday = 0;
         let cratesOpenedToday = 0;
         
-        // PIPE CONFIGURATION
+        // PIPE CONFIGURATION - CONSTANT DISTANCE
         let PIPE_WIDTH = canvas.width * 0.08;
         let PIPE_GAP = canvas.height * 0.38;
         let BASE_PIPE_SPEED = canvas.width * 0.003;
         let GROUND_HEIGHT = canvas.height * 0.15;
+        let BASE_PIPE_DISTANCE = canvas.width * 0.6;
         
-        // Coin reward milestones
+        // Coin reward milestones - REDUCED REWARDS
         const coinMilestones = [
-            { score: 10, coins: 2, message: "+2 GU!" },
-            { score: 25, coins: 5, message: "+5 GU!" },
-            { score: 50, coins: 10, message: "+10 GU!" },
-            { score: 100, coins: 50, message: "+50 GU!" },
-            { score: 250, coins: 100, message: "+100 GU!" },
-            { score: 500, coins: 250, message: "+250 GU! INSANE!" }
+            { score: 25, coins: 2, message: "+2 GU!" },
+            { score: 50, coins: 5, message: "+5 GU!" },
+            { score: 100, coins: 10, message: "+10 GU!" },
+            { score: 250, coins: 20, message: "+20 GU!" },
+            { score: 500, coins: 50, message: "+50 GU!" }
         ];
         let reachedMilestones = new Set();
         
@@ -3159,10 +3301,9 @@
             });
         }
         
-        // FIXED: Add missing drawPipe function
         function drawPipe(pipe) {
-            // Pipe color based on whether it's moving or not
-            ctx.fillStyle = pipe.moving ? '#FF4444' : '#228B22';
+            // Original Flappy Bird pipe colors
+            ctx.fillStyle = pipe.moving ? '#9932CC' : '#228B22';
             
             // Top pipe
             ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.top);
@@ -3174,12 +3315,12 @@
             ctx.fillRect(pipe.x, pipe.bottom, PIPE_WIDTH, canvas.height - pipe.bottom);
             ctx.strokeRect(pipe.x, pipe.bottom, PIPE_WIDTH, canvas.height - pipe.bottom);
             
-            // Pipe caps
-            ctx.fillStyle = pipe.moving ? '#AA2222' : '#1A6B1A';
+            // Pipe caps (darker shade)
+            ctx.fillStyle = pipe.moving ? '#8A2BE2' : '#1A6B1A';
             ctx.fillRect(pipe.x - 5, pipe.top - 20, PIPE_WIDTH + 10, 20);
             ctx.fillRect(pipe.x - 5, pipe.bottom, PIPE_WIDTH + 10, 20);
             
-            // Moving pipe indicator
+            // Moving pipe indicator (yellow)
             if (pipe.moving) {
                 ctx.fillStyle = '#FFFF00';
                 ctx.fillRect(pipe.x + PIPE_WIDTH/2 - 5, pipe.top - 15, 10, 10);
@@ -3187,13 +3328,11 @@
             }
         }
         
-        // Draw character
         function drawCharacter() {
             if (!gameStarted) return;
             
             ctx.save();
             
-            // FIXED: Add horizontal oscillation for floating effect
             const oscillation = Math.sin(frame * 0.1) * 3;
             const verticalFloat = Math.sin(frame * 0.05) * 2;
             
@@ -3202,7 +3341,6 @@
             
             const skin = crateShop.getSkinById(saveData.currentSkin);
             
-            // Get color
             let bodyColor, wingColor;
             
             if (skin.color === 'rainbow') {
@@ -3256,26 +3394,23 @@
             
             checkCoinMilestones();
             
-            // Update challenge progress
             updateChallengeProgress();
             
             difficulty = 1 + (Math.floor(score / 5) * 0.15);
             
-            // FIXED: Apply gravity properly
+            const coinMultiplierUpgrade = upgradesSystem.getUpgradeMultiplier('coinMultiplier');
+            
             bird.velocity += bird.gravity * gameModifiers.gravity;
             bird.y += bird.velocity;
             
-            // Horizontal oscillation
             bird.horizontalMotion = Math.sin(frame * 0.08) * 2;
             
-            // Rotation based on velocity
             if (bird.velocity < 0) {
                 bird.rotation = Math.max(-25, bird.velocity * 3);
             } else {
                 bird.rotation = Math.min(90, bird.velocity * 2);
             }
             
-            // Ground collision
             if (bird.y + bird.height >= canvas.height - GROUND_HEIGHT) {
                 if (!gameModifiers.invincible) {
                     triggerDeath();
@@ -3286,32 +3421,39 @@
                 return;
             }
             
-            // Ceiling collision
             if (bird.y <= 0) {
                 bird.y = 0;
                 bird.velocity = 0;
             }
             
-            // Update pipes
+            // Update pipes - WITH VERTICAL MOVEMENT FOR PURPLE PIPES
             pipes.forEach((pipe) => {
+                pipe.x -= BASE_PIPE_SPEED * difficulty * gameModifiers.pipeSpeed;
+                
+                // FIXED: Vertical movement for purple pipes
                 if (pipe.moving) {
+                    // Update pipe position based on movement direction
                     pipe.top += pipe.moveSpeed * pipe.moveDirection;
-                    pipe.bottom = pipe.top + PIPE_GAP;
+                    pipe.bottom += pipe.moveSpeed * pipe.moveDirection;
                     
-                    if (pipe.top <= canvas.height * 0.1 || pipe.top >= canvas.height - GROUND_HEIGHT - PIPE_GAP - 50) {
+                    // Reverse direction if hitting boundaries
+                    if (pipe.top <= canvas.height * 0.05 || 
+                        pipe.bottom >= canvas.height - GROUND_HEIGHT - 20) {
                         pipe.moveDirection *= -1;
                     }
                 }
                 
-                pipe.x -= BASE_PIPE_SPEED * difficulty * gameModifiers.pipeSpeed;
-                
-                // Score point when passing pipe
                 if (!pipe.scored && pipe.x + PIPE_WIDTH < bird.x) {
                     pipe.scored = true;
                     score += 1 * gameModifiers.scoreMultiplier;
                     coinsThisRound++;
-                    totalCoins += 1 * gameModifiers.coinMultiplier;
-                    if (gameModifiers.doubleCoins) totalCoins += 1 * gameModifiers.coinMultiplier;
+                    
+                    // FIXED: HARDER COINS - Only 1-2 coins per pipe without upgrades
+                    let coinEarned = Math.floor(Math.random() * 2) + 1; // 1 or 2 coins
+                    coinEarned *= gameModifiers.coinMultiplier * coinMultiplierUpgrade;
+                    if (gameModifiers.doubleCoins) coinEarned *= 2;
+                    
+                    totalCoins += Math.floor(coinEarned);
                     totalPipesPassed++;
                     currentStreak++;
                     
@@ -3329,10 +3471,9 @@
                     }
                     
                     scoreDisplay.textContent = Math.floor(score);
-                    document.getElementById('coinCount').textContent = totalCoins;
+                    document.getElementById('coinCount').textContent = Math.floor(totalCoins);
                 }
                 
-                // Pipe collision
                 if (!gameModifiers.invincible && 
                     bird.x + bird.horizontalMotion < pipe.x + PIPE_WIDTH && 
                     bird.x + bird.horizontalMotion + bird.width > pipe.x && 
@@ -3342,13 +3483,10 @@
                 }
             });
             
-            // Remove off-screen pipes
             pipes = pipes.filter(pipe => pipe.x > -PIPE_WIDTH);
             
-            // Spawn new pipes
-            let pipeSpawnRate = Math.max(40, 100 - Math.floor(score / 5) * 8);
-            
-            if (frame % pipeSpawnRate === 0) {
+            // FIXED: CONSTANT DISTANCE BETWEEN PIPES
+            if (pipes.length === 0 || canvas.width - pipes[pipes.length - 1].x > BASE_PIPE_DISTANCE) {
                 createPipe();
             }
         }
@@ -3360,14 +3498,24 @@
             
             const isMoving = Math.random() < 0.4;
             
+            // FIXED: Set movement parameters for moving pipes
+            let moveDirection = 0;
+            let moveSpeed = 0;
+            if (isMoving) {
+                // Random initial direction: -1 for up, 1 for down
+                moveDirection = Math.random() > 0.5 ? 1 : -1;
+                // Random speed between 1-3
+                moveSpeed = 1 + Math.random() * 2;
+            }
+            
             pipes.push({
                 x: canvas.width,
                 top: top,
                 bottom: top + PIPE_GAP,
                 scored: false,
                 moving: isMoving,
-                moveDirection: isMoving ? (Math.random() > 0.5 ? 1 : -1) : 0,
-                moveSpeed: isMoving ? 0.8 + Math.random() * 1.2 : 0,
+                moveDirection: moveDirection, // FIXED: Add movement direction
+                moveSpeed: moveSpeed, // FIXED: Add movement speed
                 originalTop: top
             });
         }
@@ -3377,22 +3525,23 @@
                 if (score >= milestone.score && !reachedMilestones.has(milestone.score)) {
                     reachedMilestones.add(milestone.score);
                     
-                    let coinsEarned = milestone.coins * gameModifiers.coinMultiplier;
+                    let coinsEarned = milestone.coins;
+                    coinsEarned *= gameModifiers.coinMultiplier * upgradesSystem.getUpgradeMultiplier('coinMultiplier');
                     if (gameModifiers.doubleCoins) coinsEarned *= 2;
                     
-                    totalCoins += coinsEarned;
+                    totalCoins += Math.floor(coinsEarned);
                     saveData.coins = totalCoins;
                     
                     soundManager.playCoin();
                     
-                    if (milestone.coins >= 50) {
-                        messageSystem.addMessage(milestone.message.replace('+', `+${coinsEarned}`), 'coin', 3000);
-                        particleSystem.createCelebration(50);
+                    if (milestone.coins >= 20) {
+                        messageSystem.addMessage(milestone.message.replace('+', `+${Math.floor(coinsEarned)}`), 'coin', 3000);
+                        particleSystem.createCelebration(30);
                     } else {
-                        messageSystem.addMessage(milestone.message.replace('+', `+${coinsEarned}`), 'coin', 2000);
+                        messageSystem.addMessage(milestone.message.replace('+', `+${Math.floor(coinsEarned)}`), 'coin', 2000);
                     }
                     
-                    document.getElementById('coinCount').textContent = totalCoins;
+                    document.getElementById('coinCount').textContent = Math.floor(totalCoins);
                     
                     break;
                 }
@@ -3400,22 +3549,15 @@
         }
         
         function updateChallengeProgress() {
-            // Update score challenges
             dailyChallenges.updateChallengeProgress('score_10', score);
             dailyChallenges.updateChallengeProgress('score_25', score);
-            
-            // Update coins challenge
             dailyChallenges.updateChallengeProgress('collect_20_coins', coinsThisRound);
             
-            // Update time challenge
             const currentTime = Date.now();
             const secondsPlayed = Math.floor((currentTime - gameStartTime) / 1000);
             dailyChallenges.updateChallengeProgress('survive_30_seconds', secondsPlayed);
             
-            // Update moving pipes challenge
             dailyChallenges.updateChallengeProgress('pass_10_moving_pipes', movingPipesPassedToday);
-            
-            // Update streak challenge
             dailyChallenges.updateChallengeProgress('no_death_15', bestStreakToday);
         }
         
@@ -3523,7 +3665,6 @@
                 gamesPlayedToday++;
                 saveData.totalGamesPlayed++;
                 
-                // Update games played challenge
                 dailyChallenges.updateChallengeProgress('play_5_games', gamesPlayedToday);
                 
                 saveData.totalCoinsCollected += coinsThisRound;
@@ -3623,14 +3764,13 @@
                 gameStarted = true;
                 document.getElementById('score').classList.remove('hidden');
                 document.getElementById('coins').classList.remove('hidden');
-                document.getElementById('coinCount').textContent = totalCoins;
+                document.getElementById('coinCount').textContent = Math.floor(totalCoins);
                 pipes = [];
                 createPipe();
                 startWaitTimer();
             }, 100);
         }
         
-        // ========== MENU FUNCTIONS ==========
         function toggleShop() {
             const shop = document.getElementById('shop');
             const overlay = document.getElementById('menuOverlay');
@@ -3711,20 +3851,20 @@
             }
         }
         
-        // FIXED: Typo in closeAllMenus function
         function closeAllMenus() {
             document.getElementById('shop').classList.remove('open');
             document.getElementById('inventory').classList.remove('open');
-            document.getElementById('index').classList.remove('open'); // Fixed: classList not classlist
+            document.getElementById('index').classList.remove('open');
             document.getElementById('challenges').classList.remove('open');
             document.getElementById('achievements').classList.remove('open');
+            document.getElementById('upgrades').classList.remove('open');
             document.getElementById('menuOverlay').classList.remove('active');
         }
         
         function updateCoinDisplays() {
-            document.getElementById('menuCoins').textContent = saveData.coins;
+            document.getElementById('menuCoins').textContent = Math.floor(saveData.coins);
             document.getElementById('menuHighScore').textContent = saveData.highScore;
-            document.getElementById('shopCoins').textContent = saveData.coins + ' GU';
+            document.getElementById('shopCoins').textContent = Math.floor(saveData.coins) + ' GU';
         }
         
         // ========== DAILY LOGIN SYSTEM ==========
@@ -3737,18 +3877,24 @@
                 if (saveData.lastLoginDate !== today) {
                     const yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayStr = yesterday.toDateString();
                     
-                    if (saveData.lastLoginDate === yesterday.toDateString()) {
+                    if (saveData.lastLoginDate === yesterdayStr) {
                         saveData.loginStreak++;
-                    } else if (saveData.lastLoginDate !== today) {
+                    } else if (saveData.lastLoginDate && saveData.lastLoginDate !== today) {
+                        saveData.loginStreak = 1;
+                    } else if (!saveData.lastLoginDate) {
                         saveData.loginStreak = 1;
                     }
                     
                     saveData.lastLoginDate = today;
                     
-                    setTimeout(() => {
-                        this.showLoginBonus();
-                    }, 1000);
+                    const hasClaimedToday = saveData.dailyRewardsClaimed.includes(today);
+                    if (!hasClaimedToday) {
+                        setTimeout(() => {
+                            this.showLoginBonus();
+                        }, 1000);
+                    }
                     
                     saveGame();
                 }
@@ -3761,7 +3907,7 @@
                 if (loginMenu) {
                     document.getElementById('currentStreak').textContent = saveData.loginStreak;
                     
-                    const todayIndex = (saveData.loginStreak - 1) % this.rewards.length;
+                    const todayIndex = Math.min(saveData.loginStreak - 1, this.rewards.length - 1);
                     const reward = this.rewards[todayIndex];
                     document.getElementById('todaysReward').textContent = reward;
                     
@@ -3772,23 +3918,24 @@
             },
             
             claimDailyReward() {
-                const todayIndex = (saveData.loginStreak - 1) % this.rewards.length;
+                const today = new Date().toDateString();
+                const todayIndex = Math.min(saveData.loginStreak - 1, this.rewards.length - 1);
                 const reward = this.rewards[todayIndex];
                 
                 saveData.coins += reward;
                 totalCoins = saveData.coins;
                 
-                const today = new Date().toDateString();
                 saveData.dailyRewardsClaimed.push(today);
                 
                 soundManager.playAchievement();
                 
-                messageSystem.addMessage(`🎁 Daily Reward: +${reward} GU!`, 'coin', 3000);
+                messageSystem.addMessage(`🎁 Daily Reward: +${reward} GU! Streak: ${saveData.loginStreak} days`, 'coin', 3000);
                 
                 document.getElementById('dailyLogin').style.display = 'none';
                 
                 saveGame();
                 updateCoinDisplays();
+                updateLoginDisplay();
             },
             
             renderCalendar() {
@@ -3797,15 +3944,21 @@
                 
                 calendar.innerHTML = '';
                 
+                const today = new Date();
+                const claimedDates = new Set(saveData.dailyRewardsClaimed);
+                
                 for (let i = 0; i < 7; i++) {
+                    const dayDate = new Date();
+                    dayDate.setDate(today.getDate() - (6 - i));
+                    const dayStr = dayDate.toDateString();
+                    
                     const day = document.createElement('div');
                     day.className = 'login-day';
                     
-                    const dayIndex = i % this.rewards.length;
-                    const reward = this.rewards[dayIndex];
+                    const dayIndex = Math.min(saveData.loginStreak - (6 - i), this.rewards.length - 1);
+                    const reward = dayIndex >= 0 ? this.rewards[dayIndex] : this.rewards[0];
                     
-                    const daysAgo = saveData.loginStreak - (7 - i);
-                    if (daysAgo > 0) {
+                    if (claimedDates.has(dayStr)) {
                         day.classList.add('claimed');
                     }
                     
@@ -3827,15 +3980,17 @@
             const today = new Date().toDateString();
             const hasClaimedToday = saveData.dailyRewardsClaimed.includes(today);
             
-            document.getElementById('dailyLoginInfo').textContent = 
-                hasClaimedToday ? `🔥 ${saveData.loginStreak} Day Streak!` : '🎁 Daily Login Bonus Available!';
+            if (hasClaimedToday) {
+                document.getElementById('dailyLoginInfo').textContent = `🔥 ${saveData.loginStreak} Day Streak!`;
+            } else {
+                document.getElementById('dailyLoginInfo').textContent = '🎁 Daily Login Bonus Available!';
+            }
         }
         
         function claimDailyReward() {
             dailyLoginSystem.claimDailyReward();
         }
         
-        // Initialize game modifiers based on equipped skin
         function initGameModifiers() {
             const skin = crateShop.getSkinById(saveData.currentSkin);
             if (skin.rarity === 'secret') {
@@ -3843,7 +3998,6 @@
             }
         }
         
-        // Track crate openings
         crateShop.originalOpenCrate = crateShop.openCrate;
         crateShop.openCrate = function(crate) {
             cratesOpenedToday++;
@@ -3851,7 +4005,6 @@
             this.originalOpenCrate(crate);
         };
         
-        // ========== INITIALIZATION ==========
         canvas.addEventListener('click', flap);
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
@@ -3864,7 +4017,6 @@
             }
         });
         
-        // Initialize
         initGameModifiers();
         updateCoinDisplays();
         updateLoginDisplay();
@@ -3872,7 +4024,6 @@
         dailyChallenges.generateDailyChallenges();
         gameLoop();
         
-        // Check for achievements on load
         const initialStats = {
             gamesPlayed: saveData.totalGamesPlayed,
             highScore: saveData.highScore,
